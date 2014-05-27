@@ -18,7 +18,8 @@ syntax on
 set ruler
 
 "Want a different map leader than \
-"set mapleader = ",";
+" set mapleader = ,
+:let mapleader = ","
 
 "Ever notice a slight lag after typing the leader key + command? This lowers
 "the timeout.
@@ -57,7 +58,7 @@ set autoindent
 set laststatus=2
 
 "Prefer a slightly higher line height
-set linespace=3
+set linespace=8
 
 "Better line wrapping 
 set wrap
@@ -128,16 +129,16 @@ set list
 abbrev ff :! open -a firefox.app %:p<cr>
 
 "Map a change directory to the desktop - Mac specific
-nmap ,d :cd ~/Desktop<cr>:e.<cr>
+nmap <leader>d :cd ~/Desktop<cr>:e.<cr>
 
 "Shortcut for editing  vimrc file in a new tab
-nmap ,ev :tabedit $MYVIMRC<cr>
+nmap <leader>ev :tabedit $MYVIMRC<cr>
 
 "Change zen coding plugin expansion key to shift + e
 " let g:user_zen_expandabbr_key = '<C-e>'
 
 "Faster shortcut for commenting. Requires T-Comment plugin
-map ,c <c-_><c-_>
+map <leader>c <c-_><c-_>
 
 "Saves time; maps the spacebar to colon
 nmap <space> :
@@ -146,7 +147,7 @@ nmap <space> :
 " autocmd BufEnter * cd %:p:h
 
 "Map code completion to , + tab
-imap ,<tab> <C-x><C-o>
+imap <leader><tab> <C-x><C-o>
 
 " More useful command-line completion
 " set wildmenu
@@ -193,7 +194,8 @@ nmap <C-l> <C-w>l
 "NERDTREE PLUGIN SETTINGS
 "------------------------"
 "Shortcut for NERDTreeToggle
-nmap ,nt :NERDTreeToggle
+nmap <leader>nt :NERDTreeToggle<cr>
+nmap <leader>nf :NERDTreeFind<cr>
 
 "Show hidden files in NerdTree
 let NERDTreeShowHidden=1
@@ -205,6 +207,7 @@ autocmd VimEnter * wincmd p
 "Helpeful abbreviations
 iab lorem Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 iab llorem Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+iab met public function() {<CR>}<ESC>kf(i
 
 "Spelling corrects. Just for example. Add yours below.
 iab teh the
@@ -217,10 +220,10 @@ iab Teh The
 iabbrev mysite ftp://jeff-way.com@jeffrey-way.com/domains/
 
 "Shortcut for logging into my server
-nmap ,server :Nread ftp://jeff-way.com@jeffrey-way.com/domains/<cr>
+nmap <leader>server :Nread ftp://jeff-way.com@jeffrey-way.com/domains/<cr>
 
 "Shortcut directly to my theme files on server
-nmap ,theme :Nread ftp://jeff-way.com@jeffrey-way.com/domains/jeffrey-way.com/html/wp-content/themes/magazineJW/<cr>
+nmap <leader>theme :Nread ftp://jeff-way.com@jeffrey-way.com/domains/jeffrey-way.com/html/wp-content/themes/magazineJW/<cr>
 
 "For autocompletion of Snipmate plugin
 "let g:acp_behaviorSnipmateLength = 1
@@ -234,6 +237,10 @@ endif
 "-- tabs like Firefox
 "---- ctrl+t new tab
 "nnoremap <C-t> :tabnew<CR> " conflicts with ctags
+
+"-- FuzzyFinder
+nnoremap <C-t> :<C-u>FufFile **/<cr>
+nnoremap <C-b> :<C-u>FufBuffer<cr>
 "---- ctrl+tab next tab
 nmap <C-Tab> :tabn<CR>
 imap <C-Tab> <Esc><C-Tab>i
@@ -369,7 +376,7 @@ onoremap <M-LeftDrag> <C-C><LeftDrag>
 
 " vim plugins
 "-- NERDTree
-map <silent> <C-e> :NERDTreeFind<CR>
+" map <silent> <C-b> :NERDTreeFind<CR>
 "let g:NERDTreeKeepTree = 1
 
 "-- Run last command
@@ -395,3 +402,165 @@ function! MaximizeToggle()
     only
   endif
 endfunction
+
+
+"Load the current buffer in Chrome
+nmap <leader>ch :!open -a Google\ Chrome<cr>
+
+" Quickly go forward or backward to buffer
+nmap :bp :BufSurfBack<cr>
+nmap :bn :BufSurfForward<cr>
+
+" Create split below
+nmap :sp :rightbelow sp<cr>
+
+" Run PHPUnit tests
+map <leader>tp :!phpunit %<cr>
+ 
+" Easy motion stuff
+let g:EasyMotion_leader_key = '<Leader>'
+ 
+" Powerline (Fancy thingy at bottom stuff)
+let g:Powerline_symbols = 'fancy'
+
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#left_sep = '>>'
+" let g:airline#extensions#tabline#left_alt_sep = '>'
+
+" Indent Guidelines
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#2A2A2A ctermbg=3
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#111111 ctermbg=4
+nmap :ig <Plug>IndentGuidesToggle
+nmap :ie <Plug>IndentGuidesEnable
+nmap :id <Plug>IndentGuidesDisable
+
+" tagbar
+nmap <F8> :TagbarToggle<CR>
+
+" resize window
+" http://vim.wikia.com/wiki/VimTip427
+" Maps Alt-[h,j,k,l] to resizing a window split
+map <silent> <A-h> <C-w><
+map <silent> <A-j> <C-W>-
+map <silent> <A-k> <C-W>+
+map <silent> <A-l> <C-w>>
+
+" Maps Alt-[s.v] to horizontal and vertical split respectively
+map <silent> <A-s> :split<CR>
+map <silent> <A-v> :vsplit<CR>
+
+" Maps Alt-[s.v] to horizontal and vertical split respectively
+map <silent> <A-s> :split<CR>
+map <silent> <A-v> :vsplit<CR>
+
+function! AirlineInit()
+  let g:airline_section_a = airline#section#create(['mode', ' ', 'branch'])
+endfunction
+autocmd VimEnter * call AirlineInit()
+
+set laststatus=2   " Always show the statusline
+set encoding=utf-8 " Necessary to show Unicode glyphs
+set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+
+autocmd cursorhold * set nohlsearch
+autocmd cursormoved * set hlsearch
+ 
+" Remove search results
+command! H let @/=""
+ 
+" If you prefer the Omni-Completion tip window to close when a selection is
+" made, these lines close it on movement in insert mode or when leaving
+" insert mode
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+ 
+" Abbreviations
+abbrev pft PHPUnit_Framework_TestCase
+ 
+abbrev gm !php artisan generate:model
+abbrev gc !php artisan generate:controller
+abbrev gmig !php artisan generate:migration
+ 
+" Auto-remove trailing spaces
+autocmd BufWritePre *.php :%s/\s\+$//e
+ 
+" Edit todo list for project
+nmap <leader>todo :e todo.txt<cr>
+ 
+" Laravel framework commons
+nmap <leader>lr :e app/routes.php<cr>
+nmap <leader>lca :e app/config/app.php<cr>81Gf(%O
+nmap <leader>lcd :e app/config/database.php<cr>
+nmap <leader>lc :e composer.json<cr>
+ 
+" Concept - load underlying class for Laravel
+function! FacadeLookup()
+    let facade = input('Facade Name: ')
+    let classes = {
+\       'Form': 'Html/FormBuilder.php',
+\       'Html': 'Html/HtmlBuilder.php',
+\       'File': 'Filesystem/Filesystem.php',
+\       'Eloquent': 'Database/Eloquent/Model.php'
+\   }
+ 
+    execute ":edit vendor/laravel/framework/src/Illuminate/" . classes[facade]
+endfunction
+nmap <leader>lf :call FacadeLookup()<cr>
+ 
+" CtrlP Stuff
+ 
+" Familiar commands for file/symbol browsing
+map <D-p> :CtrlP<cr>
+map <C-r> :CtrlPBufTag<cr>
+ 
+" I don't want to pull up these folders/files when calling CtrlP
+set wildignore+=*/vendor/**
+set wildignore+=*/public/forum/**
+
+" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+ 
+" Open splits
+nmap vs :vsplit<cr>
+nmap sp :split<cr>
+ 
+" Create/edit file in the current directory
+nmap :ed :edit %:p:h/
+ 
+" Prepare a new PHP class
+function! Class()
+    let name = input('Class name? ')
+    let namespace = input('Any Namespace? ')
+ 
+    if strlen(namespace)
+        exec 'normal i<?php namespace ' . namespace . ';'
+    else
+        exec 'normal i<?php'
+    endif
+
+    " Open class
+    exec 'normal iclass ' . name . ' {^M}^[O^['
+
+    exec 'normal i^M    public function __construct()^M{^M ^M}^['
+endfunction
+nmap ,1  :call Class()<cr>
+
+" Add a new dependency to a PHP class
+function! AddDependency()
+    let dependency = input('Var Name: ')
+    let namespace = input('Class Path: ')
+
+    let segments = split(namespace, '\')
+    let typehint = segments[-1]
+
+    exec 'normal gg/construct^M:H^Mf)i, ' . typehint . ' $' . dependency . '^[/}^>O$this->^[a' . dependency . ' = $' . dependency . ';^[?{^MkOprotected $' . dependency . ';^M^[?{^MOuse ' . namespace . ';^M^['
+
+    " Remove opening comma if there is only one dependency
+    exec 'normal :%s/(, /(/g'
+endfunction
+nmap ,2  :call AddDependency()<cr>
