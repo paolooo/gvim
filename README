@@ -1,6 +1,6 @@
- To install this on your own system, paste the following into the Terminal. 
+# GVIM Config
 
- git clone https://github.com/JeffreyWay/My-Vim-Repo ~/.vim
-ln -s ~/.vim/vimrc ~/.vimrc
+## Install
 
- ...That's it. Let me know if you have any questions!
+    $ git clone https://github.com/paolooo/gvim.git ~/.vim && cd ~/.vim
+    $ git submodule update --init --recursive
