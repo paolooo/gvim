@@ -1,13 +1,13 @@
-" .vimrc File
-" Maintained by: Jeffrey Way
-" jeffrey@jeffrey-way.com
-" http://net.tutsplus.com
-"
+scriptencoding utf-6
+set laststatus=2   " Always show the statusline
+set encoding=utf-8 " Necessary to show Unicode glyphs
+set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 
 "Forget compatibility with Vi. Who cares.
 set nocompatible
 
 execute pathogen#infect()
+call pathogen#helptags()
 
 "Enable filetypes
 filetype plugin indent on
@@ -28,18 +28,25 @@ set timeoutlen=500
 "Switch between buffers without saving
 set hidden
 
-"Set the color scheme. Change this to your preference. 
-"Here's 100 to choose from: http://www.vim.org/scripts/script.php?script_id=625
-colorscheme darkspectrum
-
 "Set font type and size. Depends on the resolution. Larger screens, prefer h15
 set guifont=Monaco:h11
 
 "Tab stuff
+set smarttab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
+
+"Scroll bind
+set noscrollbind
+
+" File Specific Settings
+" ------------------------------------------------------------
+
+au FileType php,xml,*.twig,json,yaml set tabstop=4|set shiftwidth=4|set softtabstop=4
+au FileType js set tabstop=2|set shiftwidth=2|set softtabstop=2
+
 
 "Show command in bottom right portion of the screen
 set showcmd
@@ -93,7 +100,7 @@ set mouse=a " allow mouse"
 nnoremap <leader>ft Vatzf
 
 " Create dictionary for custom expansions
-set dictionary+=/Users/Home/.vim/dict.txt
+set dictionary+=~/.vim/dict.txt
 
 "Opens a vertical split and switches over (\v)
 nnoremap <leader>v <C-w>v<C-w>l
@@ -133,6 +140,9 @@ nmap <leader>d :cd ~/Desktop<cr>:e.<cr>
 
 "Shortcut for editing  vimrc file in a new tab
 nmap <leader>ev :tabedit $MYVIMRC<cr>
+nmap <leader>app :tabedit www/js/app.js<cr>
+nmap <leader>ep :tabedit ~/.vim/bundle/vim-snippets/snippets/php.snippets<cr>
+nmap <leader>vla :tabedit vendor/laravel/framework/src/Illuminate<cr>
 
 "Change zen coding plugin expansion key to shift + e
 " let g:user_zen_expandabbr_key = '<C-e>'
@@ -144,24 +154,24 @@ map <leader>c <c-_><c-_>
 nmap <space> :
 
 "Automatically change current directory to that of the file in the buffer
-" autocmd BufEnter * cd %:p:h
+"autocmd BufEnter * cd %:p:h
 
 "Map code completion to , + tab
 imap <leader><tab> <C-x><C-o>
 
 " More useful command-line completion
-" set wildmenu
+set wildmenu
 
 "Auto-completion menu
-" set wildmode=list:longest
+set wildmode=list:longest
 
 "http://vim.wikia.com/wiki/Make_Vim_completion_popup_menu_work_just_like_in_an_IDE
-" set completeopt=longest,menuone
-" inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
-"   \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-" inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
-"   \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+set completeopt=longest,menuone
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
+  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
+  \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
 "Map escape key to jj -- much faster
 imap jj <esc>
@@ -191,7 +201,7 @@ nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
 
 "------------------------"
-"NERDTREE PLUGIN SETTINGS
+"NERDTREd PLUGIN SETTINGS
 "------------------------"
 "Shortcut for NERDTreeToggle
 nmap <leader>nt :NERDTreeToggle<cr>
@@ -201,7 +211,7 @@ nmap <leader>nf :NERDTreeFind<cr>
 let NERDTreeShowHidden=1
 
 "autopen NERDTree and focus cursor in new document
-autocmd VimEnter * NERDTree
+"autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
 
 "Helpeful abbreviations
@@ -415,11 +425,17 @@ nmap :bn :BufSurfForward<cr>
 nmap :sp :rightbelow sp<cr>
 
 " Run PHPUnit tests
-map <leader>tp :!phpunit %<cr>
- 
+map <leader>pt :!clear && phpunit %<cr>
+map <leader>pp :!clear && phpunit<cr>
+map <leader>pu :!clear && phpunit --stderr --testsuite unittest<cr>
+
+" Run Behat
+map <leader>pb :!clear && vendor/bin/behat<cr>
+map <leader>ps :!clear && vendor/bin/behat --append-snippets<cr>
+
 " Easy motion stuff
 let g:EasyMotion_leader_key = '<Leader>'
- 
+
 " Powerline (Fancy thingy at bottom stuff)
 let g:Powerline_symbols = 'fancy'
 
@@ -459,41 +475,37 @@ function! AirlineInit()
 endfunction
 autocmd VimEnter * call AirlineInit()
 
-set laststatus=2   " Always show the statusline
-set encoding=utf-8 " Necessary to show Unicode glyphs
-set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
-
 autocmd cursorhold * set nohlsearch
 autocmd cursormoved * set hlsearch
- 
+
 " Remove search results
 command! H let @/=""
- 
+
 " If you prefer the Omni-Completion tip window to close when a selection is
 " made, these lines close it on movement in insert mode or when leaving
 " insert mode
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
- 
+
 " Abbreviations
 abbrev pft PHPUnit_Framework_TestCase
- 
+
 abbrev gm !php artisan generate:model
 abbrev gc !php artisan generate:controller
 abbrev gmig !php artisan generate:migration
- 
+
 " Auto-remove trailing spaces
 autocmd BufWritePre *.php :%s/\s\+$//e
- 
+
 " Edit todo list for project
 nmap <leader>todo :e todo.txt<cr>
- 
+
 " Laravel framework commons
 nmap <leader>lr :e app/routes.php<cr>
 nmap <leader>lca :e app/config/app.php<cr>81Gf(%O
 nmap <leader>lcd :e app/config/database.php<cr>
 nmap <leader>lc :e composer.json<cr>
- 
+
 " Concept - load underlying class for Laravel
 function! FacadeLookup()
     let facade = input('Facade Name: ')
@@ -503,17 +515,17 @@ function! FacadeLookup()
 \       'File': 'Filesystem/Filesystem.php',
 \       'Eloquent': 'Database/Eloquent/Model.php'
 \   }
- 
+
     execute ":edit vendor/laravel/framework/src/Illuminate/" . classes[facade]
 endfunction
 nmap <leader>lf :call FacadeLookup()<cr>
- 
+
 " CtrlP Stuff
- 
+
 " Familiar commands for file/symbol browsing
 map <D-p> :CtrlP<cr>
 map <C-r> :CtrlPBufTag<cr>
- 
+
 " I don't want to pull up these folders/files when calling CtrlP
 set wildignore+=*/vendor/**
 set wildignore+=*/public/forum/**
@@ -524,19 +536,19 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
- 
+
 " Open splits
 nmap vs :vsplit<cr>
 nmap sp :split<cr>
- 
+
 " Create/edit file in the current directory
 nmap :ed :edit %:p:h/
- 
+
 " Prepare a new PHP class
 function! Class()
     let name = input('Class name? ')
     let namespace = input('Any Namespace? ')
- 
+
     if strlen(namespace)
         exec 'normal i<?php namespace ' . namespace . ';'
     else
@@ -564,3 +576,30 @@ function! AddDependency()
     exec 'normal :%s/(, /(/g'
 endfunction
 nmap ,2  :call AddDependency()<cr>
+
+" Paolo
+set t_Co=256
+
+if has("gui_running")
+  "Set the color scheme. Change this to your preference. 
+  "Here's 100 to choose from: http://www.vim.org/scripts/script.php?script_id=625
+  colorscheme darkspectrum
+else
+  colorscheme desert
+endif
+
+"Shortcut for editing  vimrc file in a new tab
+nmap <leader>es :tabedit ~/.vim/bundle/vim-snippets/snippets/php.snippets<cr>
+
+" para iterm2
+
+" syntastic - for error checker
+let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
+
+" ctags tips and tricks
+" http://stackoverflow.com/questions/563616/vim-and-ctags-tips-and-tricks
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+
+" plantuml
+let g:plantuml_executable_script='java -jar ~/Workspace/bin/plantuml.jar'
